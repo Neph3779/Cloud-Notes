@@ -35,6 +35,25 @@ class MemoDetailViewController: UIViewController {
         return textView
     }()
 
+    private lazy var navigationBar: UINavigationBar = {
+        let navigationBar = UINavigationBar()
+        let navigationItem = UINavigationItem()
+        navigationItem.rightBarButtonItem = showMoreButton
+
+        navigationBar.translatesAutoresizingMaskIntoConstraints = false
+        navigationBar.items = [navigationItem]
+        return navigationBar
+    }()
+
+    func setUpNavigationBar() {
+        view.addSubview(navigationBar)
+        NSLayoutConstraint.activate([
+            navigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            navigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            navigationBar.topAnchor.constraint(equalTo: view.topAnchor)
+        ])
+    }
+
     private lazy var showMoreButton = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"),
                                                                 style: .plain, target: self,
                                                                 action: #selector(showMoreButtonDidTouched))
@@ -42,8 +61,10 @@ class MemoDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
+        setUpNavigationBar()
         setUpTitleTextView()
         setUpDescriptionTextView()
+        navigationBar.isHidden = false
     }
 
     override func viewDidLayoutSubviews() {
@@ -90,8 +111,6 @@ class MemoDetailViewController: UIViewController {
 
     private func setUpView() {
         view.backgroundColor = isHorizontalSizeClassRegular ? .systemBackground : .systemGray3
-        navigationItem.hidesBackButton = isHorizontalSizeClassRegular
-        navigationItem.rightBarButtonItem = showMoreButton
 
         titleTextView.backgroundColor = isHorizontalSizeClassRegular ? .systemBackground : .systemGray3
         descriptionTextView.backgroundColor = isHorizontalSizeClassRegular ? .systemBackground : .systemGray3
@@ -109,7 +128,7 @@ class MemoDetailViewController: UIViewController {
         NSLayoutConstraint.activate([
             titleTextView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             titleTextView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            titleTextView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            titleTextView.topAnchor.constraint(equalTo: navigationBar.bottomAnchor),
             titleTextView.heightAnchor.constraint(lessThanOrEqualToConstant: 50) // TODO: 적절하게 교체 필요
         ])
     }
@@ -165,6 +184,7 @@ class MemoDetailViewController: UIViewController {
 
 extension MemoDetailViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
+        // TODO: secondary view가 실시간으로 바뀌도록 설정해줄 수 있을듯
         if titleTextView.isFirstResponder {
             let latestText = titleTextView.text.last
             if latestText == "\n" || latestText == "\t" {

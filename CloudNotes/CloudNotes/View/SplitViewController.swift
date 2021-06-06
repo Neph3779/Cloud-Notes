@@ -21,8 +21,10 @@ class SplitViewController: UISplitViewController {
         let memoDetailViewController = MemoDetailViewController(memoListViewDelegate: memoListViewController)
 
         viewControllers = [
-            UINavigationController(rootViewController: memoListViewController),
-            UINavigationController(rootViewController: memoDetailViewController)
+            memoListViewController,
+            memoDetailViewController
+//            UINavigationController(rootViewController: memoListViewController),
+//            UINavigationController(rootViewController: memoDetailViewController)
         ]
     }
 
@@ -56,11 +58,11 @@ extension SplitViewController: SplitViewDelegate {
     func didSelectRow(memo: Memo, indexPath: IndexPath, memoListViewDelegate: MemoListViewDelegate) {
         let memoDetailViewController = MemoDetailViewController(memoListViewDelegate: memoListViewDelegate)
         memoDetailViewController.fetchData(memo: memo, indexPath: indexPath)
-
-        if UITraitCollection.current.horizontalSizeClass == .regular {
-            showDetailViewController(UINavigationController(rootViewController: memoDetailViewController), sender: nil)
-        } else {
-            showDetailViewController(memoDetailViewController, sender: nil)
-        }
+        showDetailViewController(memoDetailViewController, sender: nil)
+//        if UITraitCollection.current.horizontalSizeClass == .regular {
+//            showDetailViewController(UINavigationController(rootViewController: memoDetailViewController), sender: nil)
+//        } else {
+//            showDetailViewController(memoDetailViewController, sender: nil)
+//        }
     }
 }
